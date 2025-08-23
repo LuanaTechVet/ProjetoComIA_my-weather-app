@@ -11,12 +11,25 @@ export const useWeather = () => {
     try {
       setLoading(true);
       setError(null);
+
+      // 🔹 Obtém latitude e longitude da cidade
       const { latitude, longitude } = await getCoordinates(city);
-      const weatherData = await getWeather(latitude, longitude);
+
+      // 🔹 Chama a API para obter dados do clima
+      const data = await getWeather(latitude, longitude);
+
+      // 🔹 Cria objeto completo do tipo WeatherData
+      const weatherData: WeatherData = {
+        cidade: city,                 // Nome da cidade
+        temperatura: data.temperatura, // Temperatura retornada pela API    // Descrição retornada pela API
+      };
+
+      // 🔹 Atualiza o estado com o objeto completo
       setWeather(weatherData);
+
     } catch (err: any) {
       setError(err.message);
-      setWeather(null);
+      setWeather(null); // fallback caso dê erro
     } finally {
       setLoading(false);
     }
